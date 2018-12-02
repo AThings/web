@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+</head>
+<body>
+	<h1>HEY! this is my canvas page</h1>
+
+	<div>
+		<h2>Rect</h2>
+		<canvas id="first">
+			Browser does not support canvas
+		</canvas>
+		<script type="text/javascript">
+			var canvas = document.getElementById("first");
+			var ctx = canvas.getContext("2d");
+			ctx.fillStyle = "rgb(200,0,0)"; //设置颜色 和css支持的颜色类型相同
+			ctx.fillRect(0,0,100,100); //画矩形 （x坐标，y坐标，宽，高）左上角为原点
+			ctx.fillStyle = "rgba(0,0,200,0.5)";
+			ctx.fillRect(50,50,100,100);
+			ctx.fillStyle = "black";
+			ctx.strokeRect(102,0,100,100); //画矩形方框
+			ctx.clearRect(75,75,20,20); //将一个矩形区域
+		</script>
+	</div>
+	
+	<div>
+		<h2>Path</h2>
+		<canvas id="second">
+			Browser does not support canvas
+		</canvas>
+		<script type="text/javascript">
+			var canvas = document.getElementById("second");
+			var ctx = canvas.getContext("2d");
+			ctx.beginPath(); //生成一条新线
+			ctx.moveTo(0,0); //线的开始位置
+			ctx.lineTo(300,150); //线的结束位置
+			ctx.closePath(); //生成结束
+			ctx.stroke(); //绘制直线
+			ctx.beginPath(); //生成一条新线
+			ctx.fillStyle = "red";
+			ctx.moveTo(300,0); //线的开始位置
+			ctx.lineTo(0,150); //线的结束位置
+			ctx.closePath(); //生成结束
+			ctx.stroke(); //绘制直线
+		</script>
+	</div>
+
+
+</body>
+</html>
