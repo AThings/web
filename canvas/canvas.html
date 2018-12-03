@@ -35,18 +35,50 @@
 			var ctx = canvas.getContext("2d");
 			ctx.beginPath(); //生成一条新线
 			ctx.moveTo(0,0); //线的开始位置
-			ctx.lineTo(300,150); //线的结束位置
-			ctx.closePath(); //生成结束
+			ctx.lineTo(300,150); //线移动到的位置
+			ctx.closePath(); //闭合曲线，末尾和起点闭合
 			ctx.stroke(); //绘制直线
 			ctx.beginPath(); //生成一条新线
-			ctx.fillStyle = "red";
+			ctx.strokeStyle = "red";//设定后面直线的颜色
 			ctx.moveTo(300,0); //线的开始位置
-			ctx.lineTo(0,150); //线的结束位置
-			ctx.closePath(); //生成结束
+			ctx.lineTo(0,150); //线移动到的位置
+			ctx.closePath(); //闭合曲线，末尾和起点闭合
 			ctx.stroke(); //绘制直线
+
+			ctx.beginPath();
+			ctx.moveTo(150,0);
+			ctx.lineTo(0,75);  //这是一条曲线，它的颜色为红
+			ctx.lineTo(150,150);
+			ctx.stroke();
+
+			ctx.strokeStyle = "blue"; //它影响的曲线，是在它之后stroke的曲线
+
+			ctx.lineTo(300,75); //这是另一条，它的颜色为蓝
+			ctx.closePath();
+			ctx.stroke();
 		</script>
 	</div>
 
+	<div>
+		<h2>Path-2</h2>
+		<canvas id="thrid">
+			Browser does not support canvas
+		</canvas>
+		<script type="text/javascript">
+			var canvas = document.getElementById("thrid");
+			if(canvas.getContext){
+				var ctx = canvas.getContext("2d");
+				ctx.beginPath();
+				ctx.arc(75,75,74,Math.PI/2,Math.PI,true);// 绘制弧线，（x坐标，y坐标，半径，开始弧度，结束弧度，是否以逆时针绘画）
+				ctx.arcTo(150,0,150,150,20);
+				ctx.closePath();
+				ctx.stroke();
 
+				ctx.beginPath();
+				ctx.arcTo(150,0,150,150,20);
+				ctx.stroke();
+			}
+		</script>
+	</div>
 </body>
 </html>
