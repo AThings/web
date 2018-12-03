@@ -2,7 +2,15 @@
 <html>
 <head>
 	<title></title>
-
+	<style>
+		canvas{
+			border: 1px solid blue;
+		}
+		div{
+			float: left;
+			margin:0 10px;
+		}
+	</style>
 </head>
 <body>
 	<h1>HEY! this is my canvas page</h1>
@@ -34,13 +42,13 @@
 			var canvas = document.getElementById("second");
 			var ctx = canvas.getContext("2d");
 			ctx.beginPath(); //生成一条新线
-			ctx.moveTo(0,0); //线的开始位置
+			ctx.moveTo(0,0); //将画线的点移动到某位置
 			ctx.lineTo(300,150); //线移动到的位置
 			ctx.closePath(); //闭合曲线，末尾和起点闭合
 			ctx.stroke(); //绘制直线
 			ctx.beginPath(); //生成一条新线
 			ctx.strokeStyle = "red";//设定后面直线的颜色
-			ctx.moveTo(300,0); //线的开始位置
+			ctx.moveTo(300,0); //
 			ctx.lineTo(0,150); //线移动到的位置
 			ctx.closePath(); //闭合曲线，末尾和起点闭合
 			ctx.stroke(); //绘制直线
@@ -69,14 +77,138 @@
 			if(canvas.getContext){
 				var ctx = canvas.getContext("2d");
 				ctx.beginPath();
-				ctx.arc(75,75,74,Math.PI/2,Math.PI,true);// 绘制弧线，（x坐标，y坐标，半径，开始弧度，结束弧度，是否以逆时针绘画）
-				ctx.arcTo(150,0,150,150,20);
+				ctx.arc(75,75,74,Math.PI/2,Math.PI*2,false);// 绘制弧线，（x坐标，y坐标，半径，开始弧度，结束弧度，是否以逆时针绘画）
+				ctx.arcTo(150,0,50,0,20);
+				ctx.fillStyle = "red";
+				ctx.fill();
 				ctx.closePath();
 				ctx.stroke();
 
 				ctx.beginPath();
-				ctx.arcTo(150,0,150,150,20);
+				ctx.moveTo(75,90);
+				ctx.lineTo(225,90);
+				ctx.arcTo(75,90,75,90,75);
+				ctx.strokeStyle = "rgb(200,0,255)";
 				ctx.stroke();
+			}
+		</script>
+	</div>
+
+	<div>
+		<h2>A Clock</h2>
+		<canvas id="fourth">
+			Browser does not support canvas
+		</canvas>
+		<script type="text/javascript">
+			var canvas = document.getElementById("fourth");
+			if(canvas.getContext){
+				var ctx = canvas.getContext("2d");
+				ctx.beginPath();
+				ctx.arc(150,75,74,0,Math.PI*2,false);
+
+				ctx.moveTo(215,75);//不移动的话两个同心圆中间会有一条线
+				ctx.arc(150,75,65,0,Math.PI*2,false);
+
+				ctx.moveTo(150,75);
+				ctx.lineTo(110,75);
+
+				ctx.moveTo(150,75);
+				ctx.lineTo(150,25);
+				ctx.stroke();
+			}
+		</script>
+	</div>
+
+	<div>
+		<h2>Text</h2>
+		<canvas id="fifth">
+			Browser does not support canvas
+		</canvas>
+		<script type="text/javascript">
+			var canvas = document.getElementById("fifth");
+			if(canvas.getContext){
+				var ctx = canvas.getContext("2d");
+				ctx.font = "bold 14px Arial"; //以css的语法设定字体
+
+				ctx.fillText("12",100,20); // 绘制文本(绘制的字符串，x坐标，y坐标)
+
+				ctx.textAlign = "start"; //默认 对齐方式
+				ctx.fillText("12",100,40);
+
+				ctx.textAlign = "center";
+				ctx.fillText("12",100,60);
+
+				ctx.textAlign = "end";
+				ctx.fillText("12",100,80);
+
+				ctx.textBaseline = "top";
+				ctx.fillText("12",20,100);
+
+				ctx.textBaseline = "hanging";
+				ctx.fillText("12",40,100);
+
+				ctx.textBaseline = "middle";
+				ctx.fillText("12",60,100);
+
+				ctx.textBaseline = "alphabetic";
+				ctx.fillText("12",80,100);
+
+				ctx.textBaseline = "ideographic";
+				ctx.fillText("12",100,100);
+
+				ctx.textBaseline = "bottom"; //默认  文本基线
+				ctx.fillText("12",120,100);
+
+				ctx.fillText("12",140,100);
+			}
+		</script>
+	</div>
+
+	<div>
+		<h2>Change</h2>
+		<canvas id="sixth">
+			Browser does not support canvas
+		</canvas>
+		<script type="text/javascript">
+			var canvas = document.getElementById("sixth");
+			if(canvas.getContext){
+				var ctx = canvas.getContext("2d");
+				ctx.beginPath();
+				
+				
+				ctx.moveTo(75,75);
+				ctx.lineTo(151,75);
+				ctx.translate(113,75); //改变原点
+				ctx.rotate(Math.PI/2*3); //之后的图像以原点旋转
+
+				ctx.moveTo(-30,-30);
+				ctx.lineTo(30,30);
+				ctx.stroke();
+
+				ctx.save(); //将当前的设定保存到栈中
+				ctx.restore();//从栈中弹出一个设定，并使用这个设定
+			}
+		</script>
+	</div>
+
+	<div>
+		<h2>Image</h2>
+		<<img src="aaa.jpg">
+		<canvas id="seventh">
+			Browser does not support canvas
+		</canvas>
+		<script type="text/javascript">
+			var canvas = document.getElementById("seventh");
+			if(canvas.getContext){
+				var ctx = canvas.getContext("2d");
+				/*
+				var imageURI = canvas.toDataURL("aaa.jpg"); //获取图片URL
+				var image = document.createElement("img");
+				image.src = imageURI;
+				document.body.appendChild(image);*/
+
+				var image = document.images[0];
+				ctx.drawImage(image,10,10);
 			}
 		</script>
 	</div>
