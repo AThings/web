@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div>
+            立板的长(cm)：<input type="text" id="vertLong">
+            宽(cm)：<input type="text" id="vertWidth">
+            数量：<input type="text" id="vertNum">
+        </div>
+        <div>
+            横板的长(cm)：<input type="text" id="horzLong">
+            宽(cm)：<input type="text" id="horzWidth">
+            数量：<input type="text" id="horzNum">
+        </div>
+        <div id="rad">
+            有无裙板：<input type="radio" name="have">有
+            <input type="radio" name="have" checked>无
+            裙板的长(cm)：<input type="text" id="radLong">
+        </div>
+        <button type="button">计算</button>
+    </div>
+    <div>
+        需要的板：<span id="res"></span>
+    </div>
+
+    <script>
+        var ban ;
+        var banNum ;
+        var juban = function(long,width){
+            var xiaoban;
+            var flag;
+            if(long>240 || width>120){
+                return;
+            }
+            for(var j=0;j<ban.length;j++){
+                flag = false;
+                //console.log("ban "+ban+" banl "+ban[j].length+" banw "+ban[j].width);
+                if(ban[j].length>=long && ban[j].width>=width){
+                    if(ban[j].length>long && ban[j].width>width){
+                        xiaoban={length: ban[j].length , width:ban[j].width-width ,where:"for1"};
+                        ban.push(xiaoban);
+                        ban[j].width=width;
+                    }
+                        ban[j]={length: ban[j].length-long > ban[j].width ? ban[j].length-long : ban[j].width ,  width:ban[j].length-long < ban[j].width ? ban[j].length-long : ban[j].width,where:"for2"};
+                        flag=true;
+                        break;
+                    }
+            }
+            if(!flag){
+                xiaoban={length:240,width:120-width,where:"if1"};
+                ban.push(xiaoban);
+                xiaoban={length:240-long > width ? 240-long : width, width:240-long < width ? 240-long : width,where:"if2"};
+                ban.push(xiaoban);
+                banNum++;
+            }
+           
+        }
+        
+        var but = document.getElementsByTagName("button")[0];
+        but.onclick = function(){
+            ban = [];
+            banNum = 0;
+            var vertLong = document.getElementById("vertLong").value;
+            var vertWidth = document.getElementById("vertWidth").value;
+            var vertNum = document.getElementById("vertNum").value;
+            var horzLong = document.getElementById("horzLong").value;
+            var horzWidth = document.getElementById("horzWidth").value;
+            var horzNum = document.getElementById("horzNum").value;
+            var rad = document.getElementById("rad").getElementsByTagName("input");
+            if(rad[0].checked){
+                var radlong = document.getElementById("radLong").value;
+                console.log("11");
+                for(var i=0;i<2;i++){
+                juban(radlong,10);
+                }
+            }
+            if(rad[1].checked){
+                
+            }
+            for(var i=0;i<vertNum;i++){
+                juban(vertLong,vertWidth);
+            }
+            for(var i=0;i<horzNum;i++){
+                juban(horzLong,horzWidth);
+            }
+            console.log(ban);
+            var res = document.getElementById("res").innerText = banNum;
+        }
+        
+    </script>
+</body>
+</html>
