@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <com1 v-bind:co1="msg" v-test="'blue'"></com1>
+        <div>
+            <button @click="change">change</button>
+            {{ arr }}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        Vue.directive("test",function(el,binding,vnode){
+            el.style.backgroundColor = binding.value;
+        }),
+        Vue.component('com1',{
+            template:"<h1>hello world {{ co1 }} {{ msg2 }}</h1>",
+            props:["co1"],
+            data(){
+                return {
+                    msg2:"fengjialue"
+                }
+            }
+        })
+        new Vue({
+            el:"#app",
+            data:{
+                msg:"hey you",
+                arr:[1,2,3,4,5]
+            },
+            methods:{
+                change(){
+                    console.log("1");
+                    Vue.set(this.arr,2,"a");
+                }
+            }
+        })
+    </script>
+</body>
+</html>

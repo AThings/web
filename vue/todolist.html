@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        h1{
+            width: 100%;
+            text-align: center;
+        }
+        #search_box{
+            width:100%;
+            text-align: center;
+        }
+        #add_box{
+            width:100%;
+            text-align: center;
+        }
+        table{
+            width:100%;
+        }
+        tr,th,td{
+            border:1px solid black;
+            text-align: center;
+        }
+        thead tr{
+            background-color: bisque;
+        }
+        button{
+            background: blue;
+            color:white;
+            border:0;
+            border-radius: 5px;
+            padding: 5px 10px;
+            letter-spacing: 2px;
+        }
+        tfoot button{
+            background: red;
+        }
+        .active{
+            background: orange;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="page">
+        <h1>todo_list</h1>
+        <div id="search_box">
+            <input type="text" placeholder="请输入关键字" v-model="search_point">
+            <button @click="search">搜索</button>
+        </div>
+        <div id="add_box">
+            商品名称<input type="text" v-model="addName" placeholder="请输入名称">
+            商品价格<input type="text" v-model.number="addPrice">
+            <button v-on:click="addObj">增加</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>选择</th>
+                    <th>商品名称</th>
+                    <th>商品价格</th>
+                    <th>删除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item,index) in listArr":key="item.id" data-id="item.id" v-bind:class="{active : item.isOk}" @click="item.isOk = !item.isOk">
+                        <td>
+                            <input type="checkbox" id="isChoose" v-bind="{checked : item.isOk}">
+                        </td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.price}}</td>
+                        <td>
+                            <button style="background: yellow;" @click="listArr.splice(index,1)">X</button>
+                        </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td> <button @click="del">删除选中</button> </td>
+                    <td colspan="3"> 总价：{{totalPrice}}元</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var page = new Vue({
+            el:"#page",
+            data:{
+                addName:"",
+                addPrice:0,
+                theId:5,
+                search_point:"",
+                listArr:[{
+                        id:0,
+                        name:"衣服",
+                        price:123,
+                        isOk:false
+                    },{
+                        id:1,
+                        name:"裤子",
+                        price:456,
+                        isOk:false
+                    },{
+                        id:2,
+                        name:"鞋",
+                        price:444,
+                        isOk:false
+                    },{
+                        id:3,
+                        name:"帽子",
+                        price:666,
+                        isOk:false
+                    },{
+                        id:4,
+                        name:"手套",
+                        price:88,
+                        isOk:false
+                    }
+                ],
+            canShow:[]
+            },
+            methods:{
+                addObj:function(){
+                    var newObj = {
+                        id:this.theId++,
+                        name:this.addName,
+                        price:this.addPrice,
+                        isOk:false
+                    }
+                    this.listArr.push(newObj);
+                },
+                clickChoose:function(e){
+                    console.log(e);
+                    this.isOk = !this.isOk;
+                },
+                del:function(){
+                    console.log("1");
+                    let newArr = this.listArr.filter((val)=>{
+                             if(!val.isOk){
+                                return val;
+                            }
+                     })
+                     this.listArr = newArr;
+                },
+                search:function(){
+                     let newArr = this.listArr.filter((val)=>{
+                             if(val.name.includes(this.search_point)){
+                                return val;
+                            }
+                     })
+                     this.listArr = newArr;
+                }
+            },
+            computed:{
+                totalPrice:function(){
+                    return this.listArr.reduce(function(sum,list){
+                        if(list.isOk){
+                            return sum + list.price;
+                        }
+                        else{
+                            return sum + 0
+                        }
+                       
+                    },0)
+                }
+            }
+        })    
+    </script>
+</body>
+</html>
