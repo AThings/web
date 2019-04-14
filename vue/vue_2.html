@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        #test{
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -20,7 +25,7 @@
             el.style.backgroundColor = binding.value;
         }),
         Vue.component('com1',{
-            template:"<h1>hello world {{ co1 }} {{ msg2 }}</h1>",
+            template:"<h1 id='test'>hello world {{ co1 }} {{ msg2 }}</h1>",
             props:["co1"],
             data(){
                 return {

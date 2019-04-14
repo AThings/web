@@ -1,23 +1,15 @@
 <template>
   <div id="app">
-    <fengjialue lp="fengjialue"/>
-    
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link> |
+      <router-link to="/connect">connect</router-link> |
+      <router-link to="/backhome">backhome</router-link> |
+      <router-link to="/h">aliashome</router-link>
+    </div>
+    <router-view/>
   </div>
 </template>
-
-<script>
-import fengjialue from './components/fengjialue.vue'
-import Vue from 'vue/dist/vue.esm.js'
-
-
-export default {
-  name: 'app',
-  components: {
-    fengjialue
-  }
-}
-
-</script>
 
 <style>
 #app {

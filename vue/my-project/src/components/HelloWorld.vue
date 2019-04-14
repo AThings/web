@@ -1,8 +1,6 @@
 <template>
 
-<ol>
-  <test_item></test_item>
-</ol>
+<h1>{{ msg }}</h1>
   
 </template>
 
