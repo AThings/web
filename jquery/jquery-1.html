@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        p{
+            width:100px;
+            height: 50px;
+            background: rgb(194, 45, 45);
+        }
+        .test{
+            background: blue;
+        }
+        h1{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    
+    <div>
+        <p>123456</p>
+        <form action="">
+                测试1：<input type="text">
+        </form>
+    </div>
+    <form action="">
+        测试2：<input type="text">
+    </form>
+    <p>123456</p>
+    <div></div>
+    <div id="funEach">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script>
+        
+        $('p',document.getElementsByTagName('div')).css('background','rgb(100,200,100)');
+        $('div > form').hide()
+        $('<div><h2>Hello world</h2></div>').appendTo('div');
+        $('<input/>').attr('type','checkbox').appendTo('form');
+        $('<div></div>',{
+            'class':'test',
+            text:'click me!',
+            click:function(){
+                $(this).toggleClass('test')
+            }
+        }).appendTo('body');
+        $('<input/>',{
+            type:'text',
+            val:'Text',
+            focusin:function(){
+                $(this).addClass('active');
+            },
+            focusout:function(){
+                $(this).removeClass('active');
+            }
+        }).appendTo('form');
+        
+        jQuery.readyException = function( error ) {
+            console.error( error );
+        };
+        $('#funEach span').each(function(i){
+            this.innerText = i;
+            if(i==3){
+                return false;
+            }
+            else if(i==2){
+                return true;
+            }
+        })
+        document.write("<h1>div's length is " + $('div').length+"</h1>");
+        console.log($('#funEach span').get());
+        document.write("<h1>#funEach span0 text is "+$('#funEach span').get(0).innerText+"</h1>")
+    </script>
+</body>
+</html>
