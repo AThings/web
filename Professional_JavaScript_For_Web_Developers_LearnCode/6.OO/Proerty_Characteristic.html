@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var person = {};
+        Object.defineProperty(person,"name",{
+            writable:true, //是否可改
+            value:"fengjialue" //属性值
+        })
+        //alert(person.name);
+        person.name = "fjl";
+        //alert(person.name);
+
+        var book = {
+            _year:2004,
+            edition:1
+        }
+
+        //alert(book._year+"_"+book.year);
+        Object.defineProperty(book,"year",{
+            get:function(){
+                return this._year;
+            },
+            set:function(newVal){
+                this._year = newVal;
+                this.edition++;
+            }
+        })
+        book.year = 2005;
+        //alert(book._year+"_"+book.year);
+
+        var aobj = {};
+
+        Object.defineProperties(aobj,{
+            _year:{
+                writable:true,
+                value:2004
+            },
+
+            edition:{
+                writable:true,
+                value:1
+            },
+
+            year:{
+                get:function(){
+                    return this._year;
+                },
+                set:function(newVal){
+                    if(newVal>this._year){
+                        this._year = newVal;
+                        this.edition ++ ;
+                    }
+                }
+            }
+        })
+
+        //alert(aobj.year+"_"+aobj.edition);
+        aobj.year = 2003;
+        //alert(aobj.year+"_"+aobj.edition);
+        aobj.year = 2005;
+        //alert(aobj.year+"_"+aobj.edition);
+
+        var descriptor = Object.getOwnPropertyDescriptor(aobj,"_year");
+        alert(descriptor.writable+"_"+descriptor.enumerable+"_"+descriptor.configurable+"_"+descriptor.value);
+    </script>
+</body>
+</html>

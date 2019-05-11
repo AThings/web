@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function Person(name,age,job){
+            this.name = name;
+            this.age = age;
+            this.job = job;
+            this.sayName = function(){
+                alert(this.name);
+            }
+        }
+        var person1 = new Person("fengjialue","20","Handsome boy");
+        //alert(person1.name+"_"+person1.age+"_"+person1.job+"_"+person1.sayName());
+        //alert(person1.constructor == Person);
+        //alert(person1 instanceof Object);
+        //alert(person1 instanceof Person);
+
+        
+    </script>
+</body>
+</html>
