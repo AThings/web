@@ -1,0 +1,464 @@
+Example01.vue
+<template>
+  <div>
+    用户名：{{ user.name }}
+    <br />
+    <p v-if="user.role == 3">管理员可见</p>
+    <br />
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>name</th>
+          <th>inserttime</th>
+        </tr>
+      </thead>
+      <tr v-for="(c, index) in courses" v-bind:key="index">
+        <td>{{ index + 1 }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ format(c.insertTime) }}</td>
+      </tr>
+    </table>
+  </div>
+</template>
+
+<script>
+export default {
+  data: () => ({
+    user: { name: "BO", role: "3" },
+    courses: [
+      { id: 4, name: "Java", insertTime: "2019-03-05T20:20" },
+      { id: 5, name: "Web开发技术", insertTime: "2019-04-17T08:00" },
+      { id: 6, name: "系统程序设计", insertTime: "2019-05-05T12:40" }
+    ]
+  }),
+  computed: {
+    format() {
+      return data => data.replace("T", " ");
+    }
+  }
+};
+</script>
+
+Example02.vue
+
+<template>
+  <div>
+    <form>
+      <input type="text" v-model="user.name" />
+      <br />
+      <label> <input type="radio" v-model="user.sex" value="male" />男 </label>
+      <br />
+      <label>
+        <input type="radio" v-model="user.sex" value="female" />女
+      </label>
+      <br />
+      <template v-for="(c, index) in courses">
+        <label :key="`l${index}`">
+          <input
+            type="checkbox"
+            v-model="user.courses"
+            :value="{ id: c.id }"
+            :key="index"
+          />
+          {{ c.name }}
+        </label>
+        <br :key="`b${index}`" />
+      </template>
+      <br />
+      <br />
+      <select v-model="user.title">
+        <option v-for="(t, index) in titles" :key="index" :value="t.id">{{
+          t.name
+        }}</option>
+      </select>
+      <br />
+      <button type="button">提交</button>
+    </form>
+    <p>{{ user }}</p>
+  </div>
+</template>
+<script>
+export default {
+  data: () => ({
+    user: {
+      name: null,
+      sex: null,
+      courses: [],
+      title: null
+    },
+
+    titles: [
+      { id: 1, name: "讲师" },
+      { id: 2, name: "副教授" },
+      { id: 3, name: "教授" }
+    ],
+    courses: [
+      { id: 4, name: "Java", insertTime: "2019-03-05T20:20" },
+      { id: 5, name: "Web开发技术", insertTime: "2019-04-17T08:00" },
+      { id: 6, name: "系统程序设计", insertTime: "2019-05-05T12:40" }
+    ]
+  })
+};
+</script>
+
+import Vue from "vue";
+export default new Vue({
+  data: () => ({
+    isAdmin: "isAdmin",
+    e: "execption",
+    homeworks: "homeworks",
+    courses: "courses",
+    course: "course",
+    user: "user"
+  })
+});
+
+import axios from "axios";
+import bus from "@/util/Bus";
+
+axios.defaults.baseURL = "/api";
+axios.interceptors.request.use(
+  function(req) {
+    req.headers.token = sessionStorage.getItem("token");
+    return req;
+  },
+  function(error) {
+    // Do something with request error
+    return Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  function(response) {
+    return response;
+  },
+  function(error) {
+    bus.$emit(bus.e, error.response.data.message);
+    return Promise.reject(error);
+  }
+);
+
+export default axios;
+
+
+Main.js
+import axios from "@/util/MyAxios";
+import bus from "@/util/Bus";
+
+export function getMain() {
+  axios.get("/main").then(response => {
+    // 模拟异步延时操作
+    setTimeout(() => {
+      bus.$emit(bus.courses, response.data.courses);
+      bus.$emit(bus.user, response.data.user);
+    }, 1000);
+  });
+}
+
+export function postCourse(data) {
+  axios.post("admin/courses", data.course).then(response => {
+    setTimeout(() => {
+      bus.$emit(bus.courses, response.data.courses);
+    }, 1000);
+  });
+}
+
+export function getCourse(data) {
+  axios.get(`/courses/${data.cid}`).then(response => {
+    // 模拟异步延时操作
+    setTimeout(() => {
+      bus.$emit(bus.course, response.data.course);
+    }, 1000);
+  });
+}
+
+export function getHomeworks(data) {
+  axios.get(`/courses/${data.cid}/homeworks`).then(response => {
+    // 模拟异步延时操作
+    setTimeout(() => {
+      bus.$emit(bus.homeworks, response.data.homeworks);
+    }, 1000);
+  });
+}
+export function postHomework(data) {
+  axios
+    .post(`admin/courses/${data.cid}/homeworks`, data.homework)
+    .then(response => {
+      // 模拟异步延时操作
+      setTimeout(() => {
+        bus.$emit(bus.homeworks, response.data.homeworks);
+      }, 1000);
+    });
+}
+
+<template>
+  <div>
+    <button type="submit">
+      <i class="material-icons" @click="open">add</i>
+    </button>
+    <div id="bg" v-bind:style="{ display: block }">
+      <div id="content" v-bind:style="{ display: block }">
+        <form>
+          <label>
+            添加课程：
+            <input type="text" v-model="course.name" />
+          </label>
+          <br />
+          <button>
+            <i class="material-icons" @click="add">check</i>
+          </button>
+        </form>
+        <p style="text-align:right">
+          <i class="material-icons" @click="close">close</i>
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import { postCourse } from "@/main/api/Main";
+export default {
+  data: () => ({
+    block: "none",
+    course: { name: null }
+  }),
+  methods: {
+    open() {
+      this.block = "block";
+    },
+    close() {
+      this.block = "none";
+    },
+    add() {
+      postCourse({ course: this.course });
+      this.close();
+    }
+  }
+};
+</script>
+<style scoped>
+#bg {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgb(56, 56, 56);
+  z-index: 2;
+  top: 0;
+  left: 0;
+}
+#content {
+  padding: 5px;
+  text-align: left;
+  display: none;
+  width: 500px;
+  position: fixed;
+  top: 20%;
+  background: #fff;
+  z-index: 3;
+  left: 50%;
+  transform: translateX(-50%);
+}
+</style>
+
+<template>
+  <div>
+    <button type="submit">
+      <i class="material-icons" @click="open">add</i>
+    </button>
+    <div id="bg" v-bind:style="{ display: block }">
+      <div id="content" v-bind:style="{ display: block }">
+        <form>
+          <label>
+            题目：
+            <input type="text" v-model="homework.title" />
+            <br />
+          </label>
+          <label>
+            截止时间：
+            <input type="text" v-model="homework.deadLineTime" />
+            <br />
+          </label>
+          <label>
+            内容：
+            <textarea v-model="homework.content" />
+          </label>
+          <br />
+          <button>
+            <i class="material-icons" @click="add">check</i>
+          </button>
+        </form>
+        <p style="text-align:right">
+          <i class="material-icons" @click="close">close</i>
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import { postHomework } from "@/main/api/Main";
+export default {
+  data: () => ({
+    block: "none",
+    homework: {
+      title: null,
+      content: null,
+      deadLineTime: null,
+      course: { id: null }
+    }
+  }),
+  methods: {
+    open() {
+      this.block = "block";
+    },
+    close() {
+      this.block = "none";
+    },
+    add() {
+      this.homework.course.id = this.$route.params.cid;
+      console.log(this.homework);
+
+      postHomework({ homework: this.homework, cid: this.$route.params.cid });
+      this.close();
+    }
+  }
+};
+</script>
+<style scoped>
+#bg {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgb(56, 56, 56);
+  z-index: 2;
+  top: 0;
+  left: 0;
+}
+#content {
+  padding: 5px;
+  text-align: left;
+  display: none;
+  width: 500px;
+  position: fixed;
+  top: 20%;
+  background: #fff;
+  z-index: 3;
+  left: 50%;
+  transform: translateX(-50%);
+}
+</style>
+
+<template>
+  <div>
+    <h1>{{ course.name }}</h1>
+    <div>
+      <button>
+        <router-link :to="`/courses/${cid}/homeworks`">
+          <i class="material-icons">build</i>
+        </router-link>
+      </button>
+      <button>
+        <i class="material-icons">group_add</i>
+      </button>
+    </div>
+    <div id="ccontent">
+      <router-view :key="$route.path" />
+    </div>
+  </div>
+</template>
+<script>
+import bus from "@/util/Bus";
+import { getCourse } from "@/main/api/Main";
+export default {
+  props: ["cid"],
+  data: () => ({
+    course: { name: null, inserTime: null }
+  }),
+  created() {
+    getCourse({ cid: this.cid });
+    bus.$on(bus.course, data => {
+      this.course = data;
+    });
+  }
+};
+</script>
+<style scoped>
+#ccontent {
+  border: 1px solid red;
+}
+</style>
+
+<template>
+  <div>
+    <addhomework />
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>题目</th>
+          <th>内容</th>
+          <th>截止</th>
+          <th>发布</th>
+        </tr>
+      </thead>
+      <tr v-for="(h, index) in homeworks" :key="index">
+        <td>{{ index }}</td>
+        <td>{{ h.title }}</td>
+        <td>{{ h.content }}</td>
+        <td>{{ h.deadLineTime }}</td>
+        <td>{{ h.insertTime }}</td>
+      </tr>
+    </table>
+  </div>
+</template>
+<script>
+import { getHomeworks } from "@/main/api/Main";
+import bus from "@/util/Bus";
+export default {
+  components: { addhomework: () => import("./teacher/AddHomeworkButton") },
+  data: () => ({
+    homeworks: [{ id: null, title: null, content: null, insertTime: null }]
+  }),
+  created() {
+    getHomeworks({ cid: this.$route.params.cid });
+    bus.$on(bus.homeworks, data => {
+      this.homeworks = data;
+    });
+  }
+};
+</script>
+
+<template>
+  <div>
+    <ul>
+      课程
+      <li v-for="(c, index) in courses" :key="index">
+        <router-link :to="`/courses/${c.id}`">{{ c.name }}</router-link>
+      </li>
+    </ul>
+    <addcoursebutton v-if="isAdmin" />
+  </div>
+</template>
+<script>
+import bus from "@/util/Bus";
+export default {
+  components: { addcoursebutton: () => import("./teacher/AddCourseButton") },
+  data: () => ({
+    isAdmin: false,
+    courses: [{ id: null, name: null }]
+  }),
+  created() {
+    bus.$on(bus.courses, data => {
+      this.courses = data;
+    });
+    bus.$on(bus.isAdmin, data => {
+      this.isAdmin = data;
+    });
+  },
+  beforeDestroy() {
+    bus.$off(bus.courses);
+  }
+};
+</script>
